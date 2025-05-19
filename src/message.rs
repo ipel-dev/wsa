@@ -1,42 +1,73 @@
-use serde_json::Value;
+use serde_json::{json, Value};
 
-use crate::id;
-use crate::format;
+fn check_identity(id: &str) {
+    let valid = id == "server" || id == "client" || {
+        id.len() == 5 && id.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit()) // {client_id}
+    };
 
-pub fn build_request_from_server_to_client(client_id: &str /*这里使用下面的 id::generate_msg_id 生成 msg_id: &str*/, method: &str, version: /*num here */ params: Value) -> String {
-    id::generate_msg_id
-    format::build_request()
+    if !valid {
+        panic!("Invalid identity: '{}'. Must be 'server', 'client', or [a-z0-9]{{5}}", id);
+    }
 }
 
-
-/* 
-pub fn build_request_from_client_to_server(client_id: &str, id: &str, method: &str, params: Value) -> String {
-    format::build_request(client_id, "server", id, method, params)
+fn compress_identity(id: &str) -> &str {
+    match id {
+        "server" => "s",
+        "client" => "c",
+        _ => id, // {client_id} will remain same
+    }
 }
 
-pub fn build_request_from_client_to_client(sender_id: &str, target_client_id: &str, id: &str, method: &str, params: Value) -> String {
-    format::build_request(sender_id, target_client_id, id, method, params)
+pub fn build_request(from: &str, to: &str, id: &str, method: &str, params: Value) -> String {
+    json!({
+        "f": compress_identity(from),
+        "t": compress_identity(to),
+        "y": "g", // y -> type, g -> request
+        "i": id,
+        "P": {
+            "m": method,
+            "p": params
+        } // p -> playload
+    }).to_string()
 }
 
+pub fn build_response(from: &str,to: &str,id: &str,result: &str,code_or_receipt: &str,) -> String {
+    check_identity(from);
+    check_identity(to);
 
+    // only "success"/"fail" -> "s"/"f"
+    let r = match result {
+        "success" => "s",
+        "fail" => "f",
+        _ => panic!("Invalid result: '{}'. Must be 'success' or 'fail'", result),
+    };
 
-
-
-
-
-pub fn build_response_from_server_to_client(client_id: &str, id: &str, result: &str, code_or_receipt: &str) -> String {
-    format::build_response("server", client_id, id, result, code_or_receipt)
+    json!({
+        "f": compress_identity(from),
+        "t": compress_identity(to),
+        "y": "r", // r -> response
+        "i": id,
+        "P": {
+            "r": r,
+            "c": code_or_receipt
+        }
+    })
+    .to_string()
 }
 
-pub fn build_response_from_client_to_server(client_id: &str, id: &str, result: &str, code_or_receipt: &str) -> String {
-    format::build_response(client_id, "server", id, result, code_or_receipt)
-}
+pub fn build_event(from: &str,to: &str,id: &str,method: &str,params: Value,) -> String {
+    check_identity(from);
+    check_identity(to);
 
-pub fn build_response_from_client_to_client(sender_id: &str, target_client_id: &str, id: &str, result: &str, code_or_receipt: &str) -> String {
-    format::build_response(sender_id, target_client_id, id, result, code_or_receipt)
+    json!({
+        "f": compress_identity(from),
+        "t": compress_identity(to),
+        "y": "e", // e -> event
+        "i": id,
+        "P": {
+            "m": method,
+            "p": params
+        }
+    })
+    .to_string()
 }
-
-pub fn build_event_from_server_to_client(id: &str, method: &str, params: Value) -> String {
-    format::build_event("server", "client", id, method, params)
-}
-*/
