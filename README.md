@@ -115,11 +115,11 @@ Only three values are allowed:
 
 ```json
 {
-  "f": "s", // "s" = server, "c" = client, or "{client_id}"
-  "t": "", // target
-  "y": "g", // "g"=request, "r"=response, "e"=event
-  "i": "abc12", // short ID [a-z0-9]{5}
-  "P": {} // payload
+  "f": "s",
+  "t": "",
+  "y": "g",
+  "i": "abc12",
+  "P": {}
 }
 ```
 
