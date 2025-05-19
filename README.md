@@ -20,7 +20,7 @@
 ### Rules
 
 - `client` can be the target (`to`) if the message originates from the `server`, or is routed **via** the server from another client
-- A client **may send** a message with `to: "client"`, but it **must** be relayed through the server, which will handle authentication and authorization (details to be discussed later)
+- A client **may send** a message with `to: "client"`, but it **must** be relayed through the server, which will handle authentication and authorization.
 
 ## Type
 
@@ -33,11 +33,13 @@ Only three values are allowed:
 ## ID
 
 - Message `id` is chosen by the sender
-- It should be the ISO8601 timestamp at the moment of sending, e.g.:
+- It should be the ISO8601 timestamp at the moment of sending, e.g.: 
 
   ```
   "2025-05-14T11:27:31.536370717+08:00"
   ```
+
+**This feature may be cancelled in the next version. At that time, it will be changed to a string of [a-z0-9]{5}, msg_id.**
 
 - For `response` type messages:
 
