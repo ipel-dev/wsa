@@ -7,3 +7,11 @@ pub fn check_identity(id: &str) {
         panic!("Invalid identity: '{}'. Must be 'server', 'client', or [a-z0-9]{{5}}", id);
     }
 }
+
+pub fn compress_identity(id: &str) -> &str {
+    match id {
+        "server" => "s",
+        "client" => "c",
+        _ => id,
+    }
+}

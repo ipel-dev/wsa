@@ -1,9 +1,10 @@
 use serde_json::{json, Value};
+use super::common::{compress_identity};
 
 pub fn build_request(from: &str, to: &str, id: &str, method: &str, params: Value) -> String {
     json!({
-        "f": from,
-        "t": to,
+        "f": compress_identity(from),
+        "t": compress_identity(to),
         "y": "g",
         "i": id,
         "P": {
@@ -22,8 +23,8 @@ pub fn build_response(from: &str, to: &str, id: &str, result: &str, code_or_rece
         _ => json!({}),
     };
     json!({
-        "f": from,
-        "t": to,
+        "f": compress_identity(from),
+        "t": compress_identity(to),
         "y": "r",
         "i": id,
         "P": {
@@ -34,8 +35,8 @@ pub fn build_response(from: &str, to: &str, id: &str, result: &str, code_or_rece
 
 pub fn build_event(from: &str, to: &str, id: &str, method: &str, params: Value) -> String {
     json!({
-        "f": from,
-        "t": to,
+        "f": compress_identity(from),
+        "t": compress_identity(to),
         "y": "e",
         "i": id,
         "P": {
