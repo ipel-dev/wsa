@@ -24,7 +24,7 @@ pub fn build_request(from: &str, to: &str, id: &str, method: &str, params: Value
         "t": compress_identity(to),
         "y": "g", // y -> type, g -> request
         "i": id,
-        "P": {
+        "p": {
             "m": method,
             "p": params
         } // p -> playload
@@ -47,7 +47,7 @@ pub fn build_response(from: &str,to: &str,id: &str,result: &str,code_or_receipt:
         "t": compress_identity(to),
         "y": "r", // r -> response
         "i": id,
-        "P": {
+        "p": {
             "r": r,
             "c": code_or_receipt
         }
@@ -64,7 +64,7 @@ pub fn build_event(from: &str,to: &str,id: &str,method: &str,params: Value,) -> 
         "t": compress_identity(to),
         "y": "e", // e -> event
         "i": id,
-        "P": {
+        "p": {
             "m": method,
             "p": params
         }
